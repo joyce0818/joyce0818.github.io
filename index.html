@@ -1,13 +1,216 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>我的網頁</title>
-    <link rel="icon" href="gd.webp">
-  </head>
-  <body>
-    1523153415234
-  </body>
-</html>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>心情點歌系統</title>
 
-    
+<style>
+    body {
+        font-family: "Microsoft JhengHei", sans-serif;
+        background: #f4f4f4;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .box {
+        border: 2px solid #000;
+        padding: 20px;
+        margin: 20px auto;
+        background: white;
+        width: 80%;
+        max-width: 700px;
+    }
+
+    .mood-buttons button {
+        padding: 10px 20px;
+        margin: 5px;
+        border-radius: 8px;
+        border: 1px solid #333;
+        cursor: pointer;
+        background: #fff;
+        transition: 0.2s;
+    }
+
+    .mood-buttons button:hover {
+        background: #e0e0e0;
+    }
+
+    #result-section {
+        display: none;
+        margin-top: 20px;
+    }
+
+    .info-area {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+
+    .info-box {
+        border: 2px solid #000;
+        width: 40%;
+        padding: 15px;
+        min-height: 150px;
+        background: #fff;
+        margin-top: 10px;
+    }
+
+    #change-btn {
+        margin-top: 20px;
+        padding: 10px 20px;
+        border: 2px solid #000;
+        border-radius: 50px;
+        background: #fff;
+        cursor: pointer;
+    }
+
+    /* YouTube player box */
+    #player-area {
+        width: 100%;
+        margin-top: 20px;
+    }
+</style>
+</head>
+<body>
+
+<!-- 引導語 + 心情 -->
+<div class="box">
+    <h2>引導語：請選擇你的心情</h2>
+
+    <div class="mood-buttons">
+        <button onclick="chooseMood('開心')">😀 開心</button>
+        <button onclick="chooseMood('難過')">😢 難過</button>
+        <button onclick="chooseMood('放鬆')">😌 放鬆</button>
+        <button onclick="chooseMood('生氣')">😡 生氣</button>
+        <button onclick="chooseMood('緊張')">😰 緊張</button>
+    </div>
+</div>
+
+<!-- 今日心情 -->
+<div class="box">
+    <h3>今日心情：<span id="today-mood">未選擇</span></h3>
+</div>
+
+<!-- 按鈕 -->
+<button id="start-btn" class="box" style="width:150px;" onclick="startRecommend()">
+    開始推薦
+</button>
+
+<!-- 結果區塊 -->
+<div id="result-section" class="box">
+
+    <!-- YouTube 播放器 -->
+    <div id="player-area"></div>
+
+    <div class="info-area">
+        <div class="info-box" id="song-info">歌曲資訊</div>
+        <div class="info-box" id="lyrics">歌詞</div>
+    </div>
+
+    <button id="change-btn" onclick="changeSong()">換一首</button>
+</div>
+
+<script>
+    let selectedMood = "";
+
+    /* 你可以在這裡增加更多歌曲 */
+    let songList = {
+        "開心": [
+            {
+                title: "Here Comes The Sun",
+                artist: "The Beatles",
+                videoId: "KQetemT1sWc",
+                lyrics: "Here comes the sun, and I say it's alright..."
+            },
+            {
+                title: "Happy",
+                artist: "Pharrell Williams",
+                videoId: "ZbZSe6N_BXs",
+                lyrics: "Because I'm happy..."
+            }
+        ],
+        "難過": [
+            {
+                title: "Fix You",
+                artist: "Coldplay",
+                videoId: "k4V3Mo61fJM",
+                lyrics: "Lights will guide you home..."
+            }
+        ],
+        "放鬆": [
+            {
+                title: "Better Together",
+                artist: "Jack Johnson",
+                videoId: "seZMOTGCDag",
+                lyrics: "It's always better when we're together..."
+            }
+        ],
+        "生氣": [
+            {
+                title: "In The End",
+                artist: "Linkin Park",
+                videoId: "eVTXPUF4Oz4",
+                lyrics: "I tried so hard and got so far..."
+            }
+        ],
+        "緊張": [
+            {
+                title: "Weightless",
+                artist: "Marconi Union",
+                videoId: "UfcAVejslrU",
+                lyrics: "(純音樂)"
+            }
+        ]
+    };
+
+    function chooseMood(mood) {
+        selectedMood = mood;
+        document.getElementById("today-mood").innerText = mood;
+    }
+
+    function startRecommend() {
+        if (!selectedMood) {
+            alert("請先選擇心情！");
+            return;
+        }
+        showRandomSong();
+        document.getElementById("result-section").style.display = "block";
+    }
+
+    function showRandomSong() {
+        let list = songList[selectedMood];
+        let song = list[Math.floor(Math.random() * list.length)];
+
+        // 歌曲資訊
+        document.getElementById("song-info").innerHTML =
+            `<b>${song.title}</b><br>${song.artist}`;
+
+        // 歌詞
+        document.getElementById("lyrics").innerText = song.lyrics;
+
+        // YouTube Player
+        showVideo(song.videoId);
+    }
+
+    function changeSong() {
+        showRandomSong();
+    }
+
+    function showVideo(videoId) {
+        let iframe = `
+            <iframe width="100%" height="300"
+                src="https://www.youtube.com/embed/${videoId}"
+                title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+        `;
+        document.getElementById("player-area").innerHTML = iframe;
+    }
+</script>
+
+</body>
+</html>
