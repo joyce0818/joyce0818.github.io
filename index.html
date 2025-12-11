@@ -2,51 +2,48 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>心情推薦歌曲</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心情音樂推薦</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <!-- 引導語 -->
-    <div class="header-box">
-        <h2>根據你的心情，推薦一首韓文歌給你 🎵</h2>
+        <!-- 引導語 ＋ 心情 -->
+        <div class="box guide-box">
+            <p>引導語：今天想聽點什麼呢？</p>
+            <p>心情： <span id="moodText">－</span></p>
+        </div>
+
+        <!-- 今日心情（輸入） -->
+        <div class="box input-box">
+            <input id="moodInput" type="text" placeholder="輸入今日心情...">
+        </div>
+
+        <!-- 按鈕 -->
+        <div class="box button-box">
+            <button id="sendBtn">送出</button>
+        </div>
+
+        <!-- MV 位置 -->
+        <div class="box mv-box">
+            <div id="mvArea">
+                <!-- YouTube Iframe 會放在這 -->
+            </div>
+        </div>
+
+        <!-- 歌曲資訊 -->
+        <div class="box info-box">
+            <p id="songInfo">歌曲資訊將顯示在這裡</p>
+        </div>
+
+        <!-- 換一首 -->
+        <div class="box change-box">
+            <button id="changeBtn">換一首</button>
+        </div>
+
     </div>
-
-    <!-- 今日心情 -->
-    <div class="mood-box">
-        <label>今日心情：</label>
-        <select id="moodSelect">
-            <option value="">--- 請選擇 ---</option>
-            <option value="happy">開心</option>
-            <option value="sad">難過</option>
-            <option value="angry">生氣</option>
-            <option value="relax">放鬆</option>
-        </select>
-    </div>
-
-    <!-- 推薦按鈕 -->
-    <button id="searchBtn" class="main-btn">推薦一首歌</button>
-
-    <!-- MV 區 -->
-    <div class="mv-box">
-        <iframe id="ytPlayer" width="100%" height="350"
-            src=""
-            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen></iframe>
-    </div>
-
-    <!-- 歌曲資訊 -->
-    <div class="info-box">
-        <h3 id="songTitle">歌曲資訊會顯示在這裡</h3>
-        <p id="lyrics">等待你選擇心情～</p>
-    </div>
-
-    <!-- 換一首 -->
-    <button id="changeSong" class="change-btn">換一首</button>
-
-</div>
 
 <script src="script.js"></script>
 </body>
