@@ -1,104 +1,118 @@
 <!DOCTYPE html>
-cursor: pointer;
-border-radius: 8px;
-}
-.section-box {
-border: 1px solid #ccc;
-padding: 20px;
-margin-top: 20px;
-background: white;
-}
-#recommendBox {
-margin-top: 20px;
-padding: 20px;
-border: 1px solid #ccc;
-background: white;
-}
-.video-box iframe {
-width: 100%;
-height: 350px;
-}
-.info-row {
-display: flex;
-justify-content: space-around;
-margin-top: 20px;
-}
-.info-card {
-width: 40%;
-border: 1px solid #ccc;
-padding: 20px;
-min-height: 120px;
-}
-.switch-btn {
-margin-top: 20px;
-padding: 10px 25px;
-border: 1px solid #ccc;
-background: white;
-border-radius: 20px;
-cursor: pointer;
-}
-</style>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>心情歌曲推薦</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    .container {
+      width: 80%;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border: 1px solid #ccc;
+    }
+    .mood-buttons button {
+      padding: 10px 20px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      background: white;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    .section-box {
+      border: 1px solid #ccc;
+      padding: 20px;
+      margin-top: 20px;
+      background: white;
+    }
+    #recommendBox {
+      margin-top: 20px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      background: white;
+    }
+    .video-box iframe {
+      width: 100%;
+      height: 350px;
+    }
+    .info-row {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+    .info-card {
+      width: 40%;
+      border: 1px solid #ccc;
+      padding: 20px;
+      min-height: 120px;
+    }
+    .switch-btn {
+      margin-top: 20px;
+      padding: 10px 25px;
+      border: 1px solid #ccc;
+      background: white;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-<h2>引導語：請選擇你的心情</h2>
+  <div class="container">
+    <h2>引導語：請選擇你的心情</h2>
 
+    <div class="mood-buttons">
+        <button data-mood="happy">😊 開心 — 感覺今天什麼都很順利</button>
+        <button data-mood="sad">😢 難過 — 有點失落或想放鬆心情</button>
+        <button data-mood="relax">😌 放鬆 — 想聽點舒服不緊張的歌</button>
+        <button data-mood="angry">😡 生氣 — 想用音樂發洩一下情緒</button>
+        <button data-mood="stress">😖 壓力 — 想找首能安定心的歌</button>
+    </div>
 
-<div class="mood-buttons">
-<button onclick="setMood('開心')">😊 開心</button>
-<button onclick="setMood('難過')">😢 難過</button>
-<button onclick="setMood('放鬆')">😌 放鬆</button>
-<button onclick="setMood('生氣')">😡 生氣</button>
-<button onclick="setMood('緊張')">😖 緊張</button>
-</div>
+    <div class="section-box" id="moodDisplay">今日心情：尚未選擇</div>
 
+    <button class="switch-btn" onclick="recommend()">開始推薦</button>
 
-<div class="section-box" id="moodDisplay">今日心情：尚未選擇</div>
+    <div id="recommendBox" style="display:none;">
+      <div class="video-box" id="video"></div>
 
+      <div class="info-row">
+        <div class="info-card" id="songInfo">歌曲資訊</div>
+        <div class="info-card" id="lyrics">歌詞區</div>
+      </div>
 
-<button class="switch-btn" onclick="recommend()">開始推薦</button>
-
-
-<div id="recommendBox" style="display:none;">
-<div class="video-box" id="video"></div>
-
-
-<div class="info-row">
-<div class="info-card" id="songInfo">歌曲資訊</div>
-<div class="info-card" id="lyrics">歌詞區</div>
-</div>
-
-
-<button class="switch-btn" onclick="switchSong()">換一首</button>
-</div>
-</div>
-
+      <button class="switch-btn" onclick="switchSong()">換一首</button>
+    </div>
+  </div>
 
 <script>
-let mood = '';
-function setMood(m) {
-mood = m;
-document.getElementById('moodDisplay').innerText = '今日心情：' + m;
-}
+  let mood = '';
+  function setMood(m) {
+    mood = m;
+    document.getElementById('moodDisplay').innerText = '今日心情：' + m;
+  }
 
+  function recommend() {
+    if (!mood) return alert('請先選擇心情');
+    document.getElementById('recommendBox').style.display = 'block';
+    loadSong();
+  }
 
-function recommend() {
-if (!mood) return alert('請先選擇心情');
-document.getElementById('recommendBox').style.display = 'block';
-loadSong();
-}
+  function loadSong() {
+    document.getElementById('video').innerHTML = `<iframe src="https://www.youtube.com/embed/fmI_Ndrxy14" frameborder="0" allowfullscreen></iframe>`;
+    document.getElementById('songInfo').innerHTML = `Better Together<br>Jack Johnson`;
+    document.getElementById('lyrics').innerHTML = `此處可放歌詞摘要（不可貼完整歌詞）`;
+  }
 
-
-function loadSong() {
-document.getElementById('video').innerHTML = `<iframe src="https://www.youtube.com/embed/fmI_Ndrxy14" frameborder="0" allowfullscreen></iframe>`;
-document.getElementById('songInfo').innerHTML = `Better Together<br>Jack Johnson`;
-document.getElementById('lyrics').innerHTML = `此處可放歌詞摘要（不可貼完整歌詞）`;
-}
-
-
-function switchSong() {
-loadSong();
-}
+  function switchSong() {
+    loadSong();
+  }
 </script>
 </body>
 </html>
