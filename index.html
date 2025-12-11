@@ -1,121 +1,117 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <title>心情歌曲推薦</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f2f2f2;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-    }
-    .container {
-      width: 80%;
-      margin: 20px auto;
-      background: white;
-      padding: 20px;
-      border: 1px solid #ccc;
-    }
-    .mood-buttons button {
-      padding: 10px 20px;
-      margin: 5px;
-      border: 1px solid #ccc;
-      background: white;
-      cursor: pointer;
-      border-radius: 8px;
-    }
-    .section-box {
-      border: 1px solid #ccc;
-      padding: 20px;
-      margin-top: 20px;
-      background: white;
-    }
-    #recommendBox {
-      margin-top: 20px;
-      padding: 20px;
-      border: 1px solid #ccc;
-      background: white;
-    }
-    .video-box iframe {
-      width: 100%;
-      height: 350px;
-    }
-    .info-row {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 20px;
-    }
-    .info-card {
-      width: 40%;
-      border: 1px solid #ccc;
-      padding: 20px;
-      min-height: 120px;
-    }
-    .switch-btn {
-      margin-top: 20px;
-      padding: 10px 25px;
-      border: 1px solid #ccc;
-      background: white;
-      border-radius: 20px;
-      cursor: pointer;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>心情歌曲推薦</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            margin-top: 30px;
+        }
+        .mood-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px;
+        }
+        .mood-buttons button {
+            padding: 10px 15px;
+            border: 2px solid #000;
+            background: #fff;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+        .active-mood {
+            background-color: #ffdcdc;
+            border-color: #ff7070;
+        }
+        .mood-box {
+            border: 2px solid #000;
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+        #recommendBtn {
+            padding: 10px 20px;
+            border: 2px solid #000;
+            background: #fff;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+        .video-box {
+            width: 600px;
+            height: 340px;
+            border: 2px solid #000;
+            margin-top: 30px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .info-row {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .info-box {
+            border: 2px solid #000;
+            width: 280px;
+            height: 120px;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        #changeBtn {
+            margin-top: 30px;
+            padding: 12px 50px;
+            border: 2px solid #000;
+            border-radius: 30px;
+            background: #fff;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h2>引導語：請選擇你的心情</h2>
+    <h1>心情歌曲推薦</h1>
 
     <div class="mood-buttons">
-        <button data-mood="happy">😊 開心 — 感覺今天什麼都很順利</button>
-        <button data-mood="sad">😢 難過 — 有點失落或想放鬆心情</button>
-        <button data-mood="relax">😌 放鬆 — 想聽點舒服不緊張的歌</button>
-        <button data-mood="angry">😡 生氣 — 想用音樂發洩一下情緒</button>
-        <button data-mood="stress">😖 壓力 — 想找首能安定心的歌</button>
+        <button data-mood="happy">😊 開心 — 感覺今天很順利</button>
+        <button data-mood="sad">😢 難過 — 想聽溫柔的安慰</button>
+        <button data-mood="relax">😌 放鬆 — 想聽舒服悠閒的歌</button>
+        <button data-mood="angry">😡 生氣 — 想釋放情緒</button>
+        <button data-mood="stress">😖 壓力 — 想放空一下</button>
     </div>
 
-    <div class="section-box" id="moodDisplay">今日心情：尚未選擇</div>
-
-    <button class="switch-btn" onclick="recommend()">開始推薦</button>
-
-    <div id="recommendBox" style="display:none;">
-      <div class="video-box" id="video"></div>
-
-      <div class="info-row">
-        <div class="info-card" id="songInfo">歌曲資訊</div>
-        <div class="info-card" id="lyrics">歌詞區</div>
-      </div>
-
-      <button class="switch-btn" onclick="switchSong()">換一首</button>
+    <div class="mood-box">
+        今日心情：<span id="todayMood">未選擇</span>
     </div>
-  </div>
+
+    <button id="recommendBtn">開始推薦</button>
+
+    <div class="video-box">
+        <iframe id="videoFrame" src=""></iframe>
+    </div>
+
+    <div class="info-row">
+        <div class="info-box" id="songInfo">歌曲資訊將顯示於此</div>
+        <div class="info-box" id="lyricBox">歌詞節錄將顯示於此</div>
+    </div>
+
+    <button id="changeBtn">換一首</button>
 
 <script>
-  let mood = '';
-  function setMood(m) {
-    mood = m;
-    document.getElementById('moodDisplay').innerText = '今日心情：' + m;
-  }
-
-  function recommend() {
-    if (!mood) return alert('請先選擇心情');
-    document.getElementById('recommendBox').style.display = 'block';
-    loadSong();
-  }
-
-  function loadSong() {
-    document.getElementById('video').innerHTML = `<iframe src="https://www.youtube.com/embed/fmI_Ndrxy14" frameborder="0" allowfullscreen></iframe>`;
-    document.getElementById('songInfo').innerHTML = `Better Together<br>Jack Johnson`;
-    document.getElementById('lyrics').innerHTML = `此處可放歌詞摘要（不可貼完整歌詞）`;
-  }
-
-  function switchSong() {
-    loadSong();
-  }
-</script>
-<script>
-// 心情按鈕事件
 const moodButtons = document.querySelectorAll('.mood-buttons button');
 const moodDisplay = document.getElementById('todayMood');
 let currentMood = '';
@@ -124,22 +120,50 @@ moodButtons.forEach(btn => {
     btn.addEventListener('click', () => {
         currentMood = btn.dataset.mood;
         moodDisplay.textContent = btn.textContent.split('—')[0].trim();
+
+        moodButtons.forEach(b => b.classList.remove('active-mood'));
+        btn.classList.add('active-mood');
     });
 });
 
-// 歌單資料
 const songList = {
     happy: [
-        { title: "Better Together", artist: "Jack Johnson", video: "https://www.youtube.com/embed/2v8YragSIuI", lyric: "It's always better when we're together..." }
+        { title: "Better Together", artist: "Jack Johnson", video: "https://www.youtube.com/embed/2v8YragSIuI", lyric: "輕鬆愉快的旋律片段" }
     ],
     sad: [
-        { title: "Someone Like You", artist: "Adele", video: "https://www.youtube.com/embed/hLQl3WQQoQ0", lyric: "Never mind, I'll find someone like you..." }
+        { title: "Someone Like You", artist: "Adele", video: "https://www.youtube.com/embed/hLQl3WQQoQ0", lyric: "柔和傷感的歌詞大意" }
     ],
     relax: [
-        { title: "Lofi Beats", artist: "Chillhop", video: "https://www.youtube.com/embed/5qap5aO4i9A", lyric: "Relax and study..." }
+        { title: "Lofi Beats", artist: "Chillhop", video: "https://www.youtube.com/embed/5qap5aO4i9A", lyric: "舒適放鬆的節奏描述" }
     ],
     angry: [
-        { title: "Numb", artist: "Linkin Park", video: "https://www.youtube.com/embed/kXYiU_JCYtU", lyric: "I've become so
-</html>
+        { title: "Numb", artist: "Linkin Park", video: "https://www.youtube.com/embed/kXYiU_JCYtU", lyric: "強烈情緒的歌曲片段" }
+    ],
+    stress: [
+        { title: "Weightless", artist: "Marconi Union", video: "https://www.youtube.com/embed/UfcAVejslrU", lyric: "沉靜安定的旋律感受" }
+    ]
+};
 
-         
+const recommendBtn = document.getElementById('recommendBtn');
+recommendBtn.addEventListener('click', () => {
+    if (!currentMood) return alert('請先選擇心情！');
+    loadSong(currentMood);
+});
+
+const changeBtn = document.getElementById('changeBtn');
+changeBtn.addEventListener('click', () => {
+    if (!currentMood) return alert('請先選擇心情！');
+    loadSong(currentMood);
+});
+
+function loadSong(mood) {
+    const songs = songList[mood];
+    const pick = songs[Math.floor(Math.random() * songs.length)];
+
+    document.getElementById('videoFrame').src = pick.video;
+    document.getElementById('songInfo').innerHTML = `${pick.title}<br>${pick.artist}`;
+    document.getElementById('lyricBox').textContent = pick.lyric;
+}
+</script>
+</body>
+</html>
