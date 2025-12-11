@@ -1,214 +1,155 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>心情點歌系統</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIGBANG 心情音樂推薦</title>
 
-<style>
-    body {
-        font-family: "Microsoft JhengHei", sans-serif;
-        background: #f4f4f4;
-        padding: 20px;
-        text-align: center;
-    }
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 { text-align: center; }
+        .buttons { text-align: center; margin-bottom: 20px; }
+        .button {
+            margin: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background-color: #000;
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .button:hover { background-color: #555; }
 
-    .box {
-        border: 2px solid #000;
-        padding: 20px;
-        margin: 20px auto;
-        background: white;
-        width: 80%;
-        max-width: 700px;
-    }
+        iframe {
+            width: 100%;
+            height: 350px;
+            border-radius: 10px;
+        }
 
-    .mood-buttons button {
-        padding: 10px 20px;
-        margin: 5px;
-        border-radius: 8px;
-        border: 1px solid #333;
-        cursor: pointer;
-        background: #fff;
-        transition: 0.2s;
-    }
+        .song-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
 
-    .mood-buttons button:hover {
-        background: #e0e0e0;
-    }
+        .song-info, .lyrics-box {
+            width: 50%;
+            padding: 20px;
+            border-radius: 10px;
+        }
 
-    #result-section {
-        display: none;
-        margin-top: 20px;
-    }
+        .song-info {
+            background-color: #f0f0f0;
+        }
 
-    .info-area {
-        display: flex;
-        justify-content: space-around;
-        margin-top: 20px;
-        flex-wrap: wrap;
-    }
+        .lyrics-box {
+            background-color: #fafafa;
+            white-space: pre-line;
+        }
 
-    .info-box {
-        border: 2px solid #000;
-        width: 40%;
-        padding: 15px;
-        min-height: 150px;
-        background: #fff;
-        margin-top: 10px;
-    }
-
-    #change-btn {
-        margin-top: 20px;
-        padding: 10px 20px;
-        border: 2px solid #000;
-        border-radius: 50px;
-        background: #fff;
-        cursor: pointer;
-    }
-
-    /* YouTube player box */
-    #player-area {
-        width: 100%;
-        margin-top: 20px;
-    }
-</style>
+        .change-btn {
+            margin-top: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
 </head>
+
 <body>
 
-<!-- 引導語 + 心情 -->
-<div class="box">
-    <h2>引導語：請選擇你的心情</h2>
+<h1>依照心情推薦 BIGBANG 的歌曲</h1>
 
-    <div class="mood-buttons">
-        <button onclick="chooseMood('開心')">😀 開心</button>
-        <button onclick="chooseMood('難過')">😢 難過</button>
-        <button onclick="chooseMood('放鬆')">😌 放鬆</button>
-        <button onclick="chooseMood('生氣')">😡 生氣</button>
-        <button onclick="chooseMood('緊張')">😰 緊張</button>
-    </div>
+<div class="buttons">
+    <button class="button" onclick="showSong('happy')">開心</button>
+    <button class="button" onclick="showSong('sad')">悲傷</button>
+    <button class="button" onclick="showSong('relaxed')">放鬆</button>
+    <button class="button" onclick="showSong('angry')">生氣</button>
 </div>
 
-<!-- 今日心情 -->
-<div class="box">
-    <h3>今日心情：<span id="today-mood">未選擇</span></h3>
-</div>
+<div id="video"></div>
 
-<!-- 按鈕 -->
-<button id="start-btn" class="box" style="width:150px;" onclick="startRecommend()">
-    開始推薦
-</button>
+<div id="song-display" class="song-container"></div>
 
-<!-- 結果區塊 -->
-<div id="result-section" class="box">
-
-    <!-- YouTube 播放器 -->
-    <div id="player-area"></div>
-
-    <div class="info-area">
-        <div class="info-box" id="song-info">歌曲資訊</div>
-        <div class="info-box" id="lyrics">歌詞</div>
-    </div>
-
-    <button id="change-btn" onclick="changeSong()">換一首</button>
-</div>
+<button class="button change-btn" onclick="changeSong()">換一首</button>
 
 <script>
-    let selectedMood = "";
-
-    /* 你可以在這裡增加更多歌曲 */
-    let songList = {
-        "開心": [
+    const songs = {
+        "happy": [
             {
-                title: "Here Comes The Sun",
-                artist: "The Beatles",
-                videoId: "KQetemT1sWc",
-                lyrics: "Here comes the sun, and I say it's alright..."
-            },
-            {
-                title: "Happy",
-                artist: "Pharrell Williams",
-                videoId: "ZbZSe6N_BXs",
-                lyrics: "Because I'm happy..."
+                song: "BANG BANG BANG",
+                artist: "BIGBANG",
+                url: "https://www.youtube.com/embed/2ips2mM7Zqw",
+                lyrics: `오늘 밤 너와 나 모두 다 불태워
+BANG BANG BANG!`
             }
         ],
-        "難過": [
+        "sad": [
             {
-                title: "Fix You",
-                artist: "Coldplay",
-                videoId: "k4V3Mo61fJM",
-                lyrics: "Lights will guide you home..."
+                song: "IF YOU",
+                artist: "BIGBANG",
+                url: "https://www.youtube.com/embed/k2qgadSvNyU",
+                lyrics: `If you 如果你
+真的想哭就哭吧...`
             }
         ],
-        "放鬆": [
+        "relaxed": [
             {
-                title: "Better Together",
-                artist: "Jack Johnson",
-                videoId: "seZMOTGCDag",
-                lyrics: "It's always better when we're together..."
+                song: "Let's Not Fall In Love",
+                artist: "BIGBANG",
+                url: "https://www.youtube.com/embed/9jTo6hTZmiQ",
+                lyrics: `우리 사랑하지 말아요
+아직은 잘 모르잖아요...`
             }
         ],
-        "生氣": [
+        "angry": [
             {
-                title: "In The End",
-                artist: "Linkin Park",
-                videoId: "eVTXPUF4Oz4",
-                lyrics: "I tried so hard and got so far..."
-            }
-        ],
-        "緊張": [
-            {
-                title: "Weightless",
-                artist: "Marconi Union",
-                videoId: "UfcAVejslrU",
-                lyrics: "(純音樂)"
+                song: "SOBER",
+                artist: "BIGBANG",
+                url: "https://www.youtube.com/embed/MBNQgq56egk",
+                lyrics: `왜 이렇게 답답하기만 한지
+Sober...`
             }
         ]
     };
 
-    function chooseMood(mood) {
-        selectedMood = mood;
-        document.getElementById("today-mood").innerText = mood;
-    }
+    let currentMood = "";
+    let currentIndex = 0;
 
-    function startRecommend() {
-        if (!selectedMood) {
-            alert("請先選擇心情！");
-            return;
-        }
-        showRandomSong();
-        document.getElementById("result-section").style.display = "block";
-    }
-
-    function showRandomSong() {
-        let list = songList[selectedMood];
-        let song = list[Math.floor(Math.random() * list.length)];
-
-        // 歌曲資訊
-        document.getElementById("song-info").innerHTML =
-            `<b>${song.title}</b><br>${song.artist}`;
-
-        // 歌詞
-        document.getElementById("lyrics").innerText = song.lyrics;
-
-        // YouTube Player
-        showVideo(song.videoId);
+    function showSong(mood) {
+        currentMood = mood;
+        currentIndex = Math.floor(Math.random() * songs[mood].length);
+        displaySong();
     }
 
     function changeSong() {
-        showRandomSong();
+        if (!currentMood) return alert("請先選擇心情！");
+        currentIndex = Math.floor(Math.random() * songs[currentMood].length);
+        displaySong();
     }
 
-    function showVideo(videoId) {
-        let iframe = `
-            <iframe width="100%" height="300"
-                src="https://www.youtube.com/embed/${videoId}"
-                title="YouTube video player"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen>
-            </iframe>
+    function displaySong() {
+        const s = songs[currentMood][currentIndex];
+
+        document.getElementById("video").innerHTML = `
+            <iframe src="${s.url}" allowfullscreen></iframe>
         `;
-        document.getElementById("player-area").innerHTML = iframe;
+
+        document.getElementById("song-display").innerHTML = `
+            <div class="song-info">
+                <h2>${s.song}</h2>
+                <p><b>歌手：</b> ${s.artist}</p>
+            </div>
+            <div class="lyrics-box">
+                <h3>歌詞</h3>
+                <p>${s.lyrics}</p>
+            </div>
+        `;
     }
 </script>
 
