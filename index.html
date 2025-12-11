@@ -1,50 +1,182 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>心情音樂推薦</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>心情歌曲推薦 | 期末專題範例</title>
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--accent:#6ee7b7;--muted:#9aa4b2}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,'Noto Sans TC',sans-serif;background:linear-gradient(180deg,#071026 0%, #07182b 100%);color:#e6eef6;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    .wrap{width:100%;max-width:980px}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    h1{font-size:20px;margin:0}
+    .controls{display:flex;gap:8px;align-items:center}
+    .lang{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px;border-radius:8px;color:var(--muted)}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:18px;border-radius:12px;box-shadow:0 6px 24px rgba(2,6,23,0.6);display:grid;grid-template-columns:1fr 420px;gap:16px}
+    .left{min-height:320px}
+    .moods{display:flex;flex-wrap:wrap;gap:10px}
+    .mood-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px 14px;border-radius:10px;cursor:pointer;color:var(--muted);transition:all .15s}
+    .mood-btn:hover{transform:translateY(-3px)}
+    .mood-btn.active{background:linear-gradient(90deg,var(--accent),#60a5fa);color:#02121b;border:0}
+    .info{margin-top:12px;color:var(--muted)}
+    .player{background:#071028;border-radius:10px;padding:10px}
+    .song-title{font-weight:700}
+    .song-meta{color:var(--muted);font-size:13px}
+    .lyrics-link{display:inline-block;margin-top:8px;padding:8px 12px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);text-decoration:none}
+    .footer{margin-top:12px;color:var(--muted);font-size:13px}
+    @media (max-width:900px){.card{grid-template-columns:1fr;}
+      .player{order:-1}
+    }
+  </style>
 </head>
 <body>
+  <div class="wrap">
+    <header>
+      <h1>心情歌曲推薦 — 期末專題範例</h1>
+      <div class="controls">
+        <select id="langFilter" class="lang" title="語言篩選">
+          <option value="any">全部語言</option>
+          <option value="ko">韓語 (Korean)</option>
+          <option value="en">英文 (English)</option>
+          <option value="zh">中文 (Chinese)</option>
+        </select>
+        <button id="randomBtn" class="mood-btn">隨機推薦</button>
+      </div>
+    </header>
 
-    <div class="container">
+    <main class="card">
+      <section class="left">
+        <h3>選擇你的心情</h3>
+        <div class="moods" id="moods"></div>
 
-        <!-- 引導語 ＋ 心情 -->
-        <div class="box guide-box">
-            <p>引導語：今天想聽點什麼呢？</p>
-            <p>心情： <span id="moodText">－</span></p>
-        </div>
+        <div class="info" id="info">點選上方的按鈕來取得推薦歌曲。網站會根據心情與語言篩選歌曲。</div>
 
-        <!-- 今日心情（輸入） -->
-        <div class="box input-box">
-            <input id="moodInput" type="text" placeholder="輸入今日心情...">
-        </div>
+        <div class="footer">註：為避免違反著作權，歌詞不會直接顯示；按下「查看歌詞」會開啟搜尋結果（例如 Genius）。你可以把歌單換成你喜歡的歌曲清單。</div>
+      </section>
 
-        <!-- 按鈕 -->
-        <div class="box button-box">
-            <button id="sendBtn">送出</button>
-        </div>
-
-        <!-- MV 位置 -->
-        <div class="box mv-box">
-            <div id="mvArea">
-                <!-- YouTube Iframe 會放在這 -->
+      <aside class="player">
+        <div id="nowPlaying">
+          <div class="song-title" id="songTitle">尚未播放</div>
+          <div class="song-meta" id="songMeta">—</div>
+          <div style="margin-top:10px;" id="embedWrap">
+            <!-- YouTube iframe will be inserted here -->
+            <div style="height:0;padding-bottom:56.25%;position:relative;background:#020617;border-radius:8px;overflow:hidden">
+              <iframe id="ytplayer" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" src="" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
             </div>
+          </div>
+
+          <a id="lyricsBtn" class="lyrics-link" target="_blank" rel="noopener">查看歌詞 / 搜尋</a>
         </div>
+      </aside>
+    </main>
+  </div>
 
-        <!-- 歌曲資訊 -->
-        <div class="box info-box">
-            <p id="songInfo">歌曲資訊將顯示在這裡</p>
-        </div>
+  <script>
+    // 範例歌曲清單：可自由替換或擴充
+    const SONGS = [
+      {id:'H9m6dQX1aAE', title:'Fantastic Baby', artist:'BIGBANG', lang:'ko', moods:['energetic','party','happy']},
+      {id:'9bZkp7q19f0', title:'Gangnam Style', artist:'PSY', lang:'ko', moods:['happy','funny','energetic']},
+      {id:'8SbUC-UaAxE', title:'Boulevard of Broken Dreams', artist:'Green Day', lang:'en', moods:['sad','lonely','melancholy']},
+      {id:'3tmd-ClpJxA', title:'Ddu-Du Ddu-Du', artist:'BLACKPINK', lang:'ko', moods:['confident','energetic']},
+      {id:'gGdGFtwCNBE', title:'Loser', artist:'BIGBANG', lang:'ko', moods:['sad','reflective']},
+      {id:'kXYiU_JCYtU', title:'Numb', artist:'Linkin Park', lang:'en', moods:['angry','frustrated','sad']},
+      {id:'VbfpW0pbvaU', title:'Closer', artist:'The Chainsmokers', lang:'en', moods:['romantic','happy']},
+      {id:'JGwWNGJdvx8', title:'Shape of You', artist:'Ed Sheeran', lang:'en', moods:['happy','romantic']},
+      {id:'YlUKcNNmywk', title:'Yellow', artist:'Coldplay', lang:'en', moods:['calm','melancholy']},
+      {id:'kXYiU_JCYtU', title:'Example Duplicate', artist:'Example Artist', lang:'en', moods:['calm']}
+    ];
 
-        <!-- 換一首 -->
-        <div class="box change-box">
-            <button id="changeBtn">換一首</button>
-        </div>
+    // 可擴充的心情（把想要的全部放進來）
+    const MOODS = ['happy','sad','energetic','calm','romantic','angry','lonely','confident','party','melancholy','reflective','funny'];
 
-    </div>
+    const moodsWrap = document.getElementById('moods');
+    const info = document.getElementById('info');
+    const ytplayer = document.getElementById('ytplayer');
+    const songTitle = document.getElementById('songTitle');
+    const songMeta = document.getElementById('songMeta');
+    const langFilter = document.getElementById('langFilter');
+    const randomBtn = document.getElementById('randomBtn');
+    const lyricsBtn = document.getElementById('lyricsBtn');
 
-<script src="script.js"></script>
+    // 產生按鈕
+    MOODS.forEach(m => {
+      const b = document.createElement('button');
+      b.className = 'mood-btn';
+      b.textContent = m;
+      b.dataset.mood = m;
+      b.addEventListener('click', () => selectMood(m, b));
+      moodsWrap.appendChild(b);
+    });
+
+    function selectMood(mood, btn){
+      // 樣式切換
+      document.querySelectorAll('.mood-btn').forEach(x=>x.classList.remove('active'));
+      if(btn) btn.classList.add('active');
+
+      // 篩選歌曲
+      const lang = langFilter.value; // any, ko, en, zh
+      let candidates = SONGS.filter(s => s.moods.includes(mood));
+      if(lang !== 'any') candidates = candidates.filter(s => s.lang === lang);
+
+      if(candidates.length === 0){
+        info.textContent = `抱歉，根據「${mood}」與目前語言設定找不到歌曲。你可以更改語言或加入更多歌曲。`;
+        return;
+      }
+
+      // 目前簡單取第一個或隨機
+      const chosen = candidates[Math.floor(Math.random()*candidates.length)];
+      playSong(chosen, mood);
+
+      // 存下選擇到 localStorage（方便示範）
+      try{ localStorage.setItem('lastMood', mood); localStorage.setItem('lastSong', JSON.stringify(chosen)); }catch(e){}
+    }
+
+    function playSong(song, mood){
+      songTitle.textContent = `${song.title}`;
+      songMeta.textContent = `${song.artist} · 心情：${mood}`;
+      ytplayer.src = `https://www.youtube.com/embed/${song.id}?autoplay=1&rel=0`;
+      lyricsBtn.href = buildLyricsSearchUrl(song.title, song.artist);
+      lyricsBtn.textContent = '查看歌詞 / 搜尋';
+      info.textContent = `我們為你選了「${song.title}」 — 按下播放或更換心情來試試看不同推薦。`;
+    }
+
+    function buildLyricsSearchUrl(title, artist){
+      // 這裡用 Genius 的搜尋頁作為範例；你也可以換成其他歌詞網站
+      const q = encodeURIComponent(title + ' ' + artist);
+      return `https://genius.com/search?q=${q}`;
+    }
+
+    randomBtn.addEventListener('click', ()=>{
+      // 隨機挑一個歌單內的歌曲（同時考慮語言篩選）
+      const lang = langFilter.value;
+      let pool = SONGS.slice();
+      if(lang !== 'any') pool = pool.filter(s => s.lang === lang);
+      if(pool.length === 0){ info.textContent = '目前語言篩選下沒有可用的歌曲。'; return; }
+      const chosen = pool[Math.floor(Math.random()*pool.length)];
+      // 找到一個該歌曲所屬的心情（取第一個）
+      const mood = chosen.moods[0] || 'any';
+      // 高亮對應按鈕
+      const btn = document.querySelector(`.mood-btn[data-mood="${mood}"]`);
+      if(btn) document.querySelectorAll('.mood-btn').forEach(x=>x.classList.remove('active'));
+      if(btn) btn.classList.add('active');
+      playSong(chosen, mood);
+    });
+
+    // 嘗試載入上次紀錄
+    window.addEventListener('load', ()=>{
+      try{
+        const lastSong = JSON.parse(localStorage.getItem('lastSong'));
+        const lastMood = localStorage.getItem('lastMood');
+        if(lastSong && lastMood){ playSong(lastSong, lastMood); const btn = document.querySelector(`.mood-btn[data-mood="${lastMood}"]`); if(btn) btn.classList.add('active'); }
+      }catch(e){}
+    });
+
+    // 提供簡單的擴充建議：
+    // 1) 如果要讓使用者輸入自己的心情文字，可加入 NLP 或關鍵字對照表來 map 到 MOODS
+    // 2) 如果要把歌單存在伺服器，請使用 AJAX 對後端 API 讀取歌單（例如 JSON 檔）
+    // 3) 若要取得歌詞內容，需和歌詞 API (或合法授權) 整合，並注意著作權授權
+
+  </script>
 </body>
 </html>
