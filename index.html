@@ -1,157 +1,53 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIGBANG 心情音樂推薦</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        h1 { text-align: center; }
-        .buttons { text-align: center; margin-bottom: 20px; }
-        .button {
-            margin: 5px;
-            padding: 10px 20px;
-            cursor: pointer;
-            border: none;
-            background-color: #000;
-            color: white;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        .button:hover { background-color: #555; }
-
-        iframe {
-            width: 100%;
-            height: 350px;
-            border-radius: 10px;
-        }
-
-        .song-container {
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-        }
-
-        .song-info, .lyrics-box {
-            width: 50%;
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        .song-info {
-            background-color: #f0f0f0;
-        }
-
-        .lyrics-box {
-            background-color: #fafafa;
-            white-space: pre-line;
-        }
-
-        .change-btn {
-            margin-top: 20px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-    </style>
+    <title>心情推薦歌曲</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<h1>依照心情推薦 BIGBANG 的歌曲</h1>
+<div class="container">
 
-<div class="buttons">
-    <button class="button" onclick="showSong('happy')">開心</button>
-    <button class="button" onclick="showSong('sad')">悲傷</button>
-    <button class="button" onclick="showSong('relaxed')">放鬆</button>
-    <button class="button" onclick="showSong('angry')">生氣</button>
+    <!-- 引導語 -->
+    <div class="header-box">
+        <h2>根據你的心情，推薦一首韓文歌給你 🎵</h2>
+    </div>
+
+    <!-- 今日心情 -->
+    <div class="mood-box">
+        <label>今日心情：</label>
+        <select id="moodSelect">
+            <option value="">--- 請選擇 ---</option>
+            <option value="happy">開心</option>
+            <option value="sad">難過</option>
+            <option value="angry">生氣</option>
+            <option value="relax">放鬆</option>
+        </select>
+    </div>
+
+    <!-- 推薦按鈕 -->
+    <button id="searchBtn" class="main-btn">推薦一首歌</button>
+
+    <!-- MV 區 -->
+    <div class="mv-box">
+        <iframe id="ytPlayer" width="100%" height="350"
+            src=""
+            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+    </div>
+
+    <!-- 歌曲資訊 -->
+    <div class="info-box">
+        <h3 id="songTitle">歌曲資訊會顯示在這裡</h3>
+        <p id="lyrics">等待你選擇心情～</p>
+    </div>
+
+    <!-- 換一首 -->
+    <button id="changeSong" class="change-btn">換一首</button>
+
 </div>
 
-<div id="video"></div>
-
-<div id="song-display" class="song-container"></div>
-
-<button class="button change-btn" onclick="changeSong()">換一首</button>
-
-<script>
-    const songs = {
-        "happy": [
-            {
-                song: "BANG BANG BANG",
-                artist: "BIGBANG",
-                url: "https://www.youtube.com/embed/2ips2mM7Zqw",
-                lyrics: `오늘 밤 너와 나 모두 다 불태워
-BANG BANG BANG!`
-            }
-        ],
-        "sad": [
-            {
-                song: "IF YOU",
-                artist: "BIGBANG",
-                url: "https://www.youtube.com/embed/k2qgadSvNyU",
-                lyrics: `If you 如果你
-真的想哭就哭吧...`
-            }
-        ],
-        "relaxed": [
-            {
-                song: "Let's Not Fall In Love",
-                artist: "BIGBANG",
-                url: "https://www.youtube.com/embed/9jTo6hTZmiQ",
-                lyrics: `우리 사랑하지 말아요
-아직은 잘 모르잖아요...`
-            }
-        ],
-        "angry": [
-            {
-                song: "SOBER",
-                artist: "BIGBANG",
-                url: "https://www.youtube.com/embed/MBNQgq56egk",
-                lyrics: `왜 이렇게 답답하기만 한지
-Sober...`
-            }
-        ]
-    };
-
-    let currentMood = "";
-    let currentIndex = 0;
-
-    function showSong(mood) {
-        currentMood = mood;
-        currentIndex = Math.floor(Math.random() * songs[mood].length);
-        displaySong();
-    }
-
-    function changeSong() {
-        if (!currentMood) return alert("請先選擇心情！");
-        currentIndex = Math.floor(Math.random() * songs[currentMood].length);
-        displaySong();
-    }
-
-    function displaySong() {
-        const s = songs[currentMood][currentIndex];
-
-        document.getElementById("video").innerHTML = `
-            <iframe src="${s.url}" allowfullscreen></iframe>
-        `;
-
-        document.getElementById("song-display").innerHTML = `
-            <div class="song-info">
-                <h2>${s.song}</h2>
-                <p><b>歌手：</b> ${s.artist}</p>
-            </div>
-            <div class="lyrics-box">
-                <h3>歌詞</h3>
-                <p>${s.lyrics}</p>
-            </div>
-        `;
-    }
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
