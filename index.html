@@ -31,36 +31,52 @@
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header style="text-align:center;margin-bottom:20px;">
-      <div style="background:rgba(255,255,255,0.05);padding:20px;border-radius:10px;margin-bottom:10px;">
-        <h2>引導語　心情</h2>
-      </div>
-      <div style="background:rgba(255,255,255,0.05);padding:12px;border-radius:10px;">
-        <h3>今日心情</h3>
-      </div>
-      <button id="mainBtn" class="mood-btn" style="margin-top:15px;">按鈕</button>
-    </header>
+  <div style="width:100%;max-width:800px;margin:0 auto;text-align:center;padding:20px;font-family:Arial;color:#fff;">
 
-    <section style="background:rgba(255,255,255,0.03);padding:25px;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.4);max-width:900px;margin:0 auto;">
-      <div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap;">
-        <div style="width:260px;height:260px;background:rgba(255,255,255,0.05);border-radius:10px;padding:12px;">
-          <h4>歌曲資訊</h4>
+    <!-- 1. 引導語 + 心情（大框） -->
+    <div style="border:2px solid #fff;padding:40px 0;margin-bottom:20px;font-size:24px;">
+      引導語　　心情
+    </div>
+
+    <!-- 2. 今日心情（細長框） -->
+    <div style="border:2px solid #fff;padding:18px 0;margin-bottom:20px;font-size:20px;">
+      今日心情
+    </div>
+
+    <!-- 3. 按鈕 -->
+    <button id="mainBtn" style="padding:10px 25px;font-size:18px;border:2px solid #fff;background:none;color:#fff;cursor:pointer;margin-bottom:30px;">
+      按鈕
+    </button>
+
+    <!-- 4. 大框（包含歌曲資訊 + 歌詞 + 換一首） -->
+    <div style="border:2px solid #fff;padding:30px;margin:0 auto;">
+
+      <div style="display:flex;justify-content:center;gap:40px;margin-bottom:30px;flex-wrap:wrap;">
+
+        <!-- 歌曲資訊 -->
+        <div style="border:2px solid #fff;width:250px;height:250px;padding:10px;text-align:center;">
+          <h3>歌曲資訊</h3>
           <div id="songInfo">—</div>
         </div>
-        <div style="width:260px;height:260px;background:rgba(255,255,255,0.05);border-radius:10px;padding:12px;overflow:auto;">
-          <h4>歌詞</h4>
-          <div id="lyrics">（因版權無法顯示完整歌詞，會自動連到搜尋頁）</div>
+
+        <!-- 歌詞 -->
+        <div style="border:2px solid #fff;width:250px;height:250px;padding:10px;text-align:center;overflow:auto;">
+          <h3>歌詞</h3>
+          <div id="lyrics">（將連到搜尋頁避免版權問題）</div>
         </div>
+
       </div>
-      <div style="text-align:center;margin-top:20px;">
-        <button id="changeBtn" class="mood-btn">換一首</button>
-      </div>
-    </section>
+
+      <!-- 換一首按鈕（橢圓） -->
+      <button id="changeBtn" style="padding:12px 40px;font-size:18px;border:2px solid #fff;background:none;color:#fff;border-radius:30px;cursor:pointer;">
+        換一首
+      </button>
+
+    </div>
   </div>
 
 <script>
-// 這裡保留你原本的 JS，等你確認版面後我再協助調整功能連動
+// 待你確認排版後，我再幫你串上功能
 </script>
 
 </body>
