@@ -114,5 +114,32 @@
     loadSong();
   }
 </script>
-</body>
+<script>
+// 心情按鈕事件
+const moodButtons = document.querySelectorAll('.mood-buttons button');
+const moodDisplay = document.getElementById('todayMood');
+let currentMood = '';
+
+moodButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        currentMood = btn.dataset.mood;
+        moodDisplay.textContent = btn.textContent.split('—')[0].trim();
+    });
+});
+
+// 歌單資料
+const songList = {
+    happy: [
+        { title: "Better Together", artist: "Jack Johnson", video: "https://www.youtube.com/embed/2v8YragSIuI", lyric: "It's always better when we're together..." }
+    ],
+    sad: [
+        { title: "Someone Like You", artist: "Adele", video: "https://www.youtube.com/embed/hLQl3WQQoQ0", lyric: "Never mind, I'll find someone like you..." }
+    ],
+    relax: [
+        { title: "Lofi Beats", artist: "Chillhop", video: "https://www.youtube.com/embed/5qap5aO4i9A", lyric: "Relax and study..." }
+    ],
+    angry: [
+        { title: "Numb", artist: "Linkin Park", video: "https://www.youtube.com/embed/kXYiU_JCYtU", lyric: "I've become so
 </html>
+
+         
